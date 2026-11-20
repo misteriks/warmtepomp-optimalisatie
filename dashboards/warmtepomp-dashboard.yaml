@@ -98,7 +98,7 @@ sections:
             icon: mdi:waves-arrow-up
           - entity: sensor.warmtepomp_graaddagen_hdd18
             name: "Graaddagen Gewicht (HDD18)"
-            icon: mdi:weather-snowy-thermometer
+            icon: mdi:snowflake-thermometer
           - entity: sensor.warmtepomp_gemiddelde_compressor_runduur
             name: "Gemiddelde Compressor Runduur"
             icon: mdi:timer-outline
