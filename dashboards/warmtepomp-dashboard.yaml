@@ -1,7 +1,7 @@
 # Alpha Innotec WZS 81H/K Telemetry Dashboard (Phase 1 Sensors + Phase 2 Diagnostic Charts)
 # Deployed to Home Assistant: dashboard-test
 #   - views[0]: Warmtepomp (/dashboard-test/warmtepomp) -> Sensor-only entities cards
-#   - views[1]: Warmtepomp Grafieken (/dashboard-test/warmtepomp-grafieken) -> 48h/14d Diagnostic Charts
+#   - views[1]: Warmtepomp Grafieken (/dashboard-test/warmtepomp-grafieken) -> Full-width Panel 48h/14d Diagnostic Charts
 
 views:
   - title: Warmtepomp
@@ -227,28 +227,21 @@ views:
   - title: Warmtepomp Grafieken
     path: warmtepomp-grafieken
     icon: mdi:chart-timeline-variant-shimmer
-    type: sections
-    max_columns: 2
-    sections:
-      - type: grid
-        column_span: 2
+    type: panel
+    cards:
+      - type: vertical-stack
         cards:
-          - type: heading
-            heading: Thermische Balans & Stooklijn (48 uur)
-            icon: mdi:chart-bell-curve-cumulative
           - type: custom:plotly-graph
             title: "1. Stooklijn, Watertemperaturen & Woonkamer vs. Vermogen (48u)"
-            grid_options:
-              columns: 24
             hours_to_show: 48
             refresh_interval: 30
             layout:
-              height: 420
+              height: 450
               margin:
                 t: 40
                 b: 40
-                l: 50
-                r: 50
+                l: 55
+                r: 55
               yaxis:
                 title: "Temperatuur (°C)"
               yaxis2:
@@ -258,7 +251,7 @@ views:
                 rangemode: tozero
               legend:
                 orientation: h
-                y: 1.15
+                y: 1.14
             entities:
               - entity: sensor.temperatuur_woonkamer_temperature
                 name: "Woonkamer (°C)"
@@ -300,25 +293,17 @@ views:
                   color: "rgba(155, 89, 182, 0.45)"
                   width: 1
 
-      - type: grid
-        column_span: 2
-        cards:
-          - type: heading
-            heading: Warmtewisselaars (ΔT) & Carnot COP (48 uur)
-            icon: mdi:waves-arrow-up
           - type: custom:plotly-graph
             title: "3. Condensor ΔT, Bodembron In/Uit & ΔT vs. Carnot COP (48u)"
-            grid_options:
-              columns: 24
             hours_to_show: 48
             refresh_interval: 30
             layout:
-              height: 380
+              height: 400
               margin:
                 t: 40
                 b: 40
-                l: 50
-                r: 50
+                l: 55
+                r: 55
               yaxis:
                 title: "Temp (°C) / Spread (K)"
               yaxis2:
@@ -328,7 +313,7 @@ views:
                 rangemode: tozero
               legend:
                 orientation: h
-                y: 1.18
+                y: 1.15
             entities:
               - entity: sensor.warmtepomp_condensor_delta_t
                 name: "Condensor ΔT (K)"
@@ -359,25 +344,17 @@ views:
                   color: "#27ae60"
                   width: 2
 
-      - type: grid
-        column_span: 2
-        cards:
-          - type: heading
-            heading: Tapwater (DHW) & Heetgas Cyclus (48 uur)
-            icon: mdi:water-boiler
           - type: custom:plotly-graph
             title: "4. Tapwater Boiler, Doeltemp & Heetgas vs. Vermogen (48u)"
-            grid_options:
-              columns: 24
             hours_to_show: 48
             refresh_interval: 30
             layout:
-              height: 380
+              height: 400
               margin:
                 t: 40
                 b: 40
-                l: 50
-                r: 50
+                l: 55
+                r: 55
               yaxis:
                 title: "Temperatuur (°C)"
               yaxis2:
@@ -387,7 +364,7 @@ views:
                 rangemode: tozero
               legend:
                 orientation: h
-                y: 1.18
+                y: 1.15
             entities:
               - entity: sensor.luxtronik_220131_0144_dhw_temperature
                 name: "Tapwater Boiler (°C)"
@@ -413,58 +390,45 @@ views:
                   color: "rgba(155, 89, 182, 0.45)"
                   width: 1
 
-      - type: grid
-        column_span: 1
-        cards:
-          - type: heading
-            heading: Bedrijfsstanden & Pompen Tijdlijn (48 uur)
-            icon: mdi:state-machine
-          - type: history-graph
-            title: "2. Tijdlijn Bedrijfsstanden, Energietarief & Pompen/Relais (48u)"
-            grid_options:
-              columns: 12
-            hours_to_show: 48
-            entities:
-              - entity: sensor.luxtronik_220131_0144_status
-                name: "Luxtronik Status"
-              - entity: select.warmtepomp_energie
-                name: "Actief Energietarief"
-              - entity: binary_sensor.luxtronik_220131_0144_compressor
-                name: "Compressor 1"
-              - entity: binary_sensor.luxtronik_220131_0144_circulation_pump_heating
-                name: "CV Pomp (HUP)"
-              - entity: binary_sensor.luxtronik_220131_0144_additional_circulation_pump
-                name: "Vloer Pomp (ZUP)"
-              - entity: binary_sensor.luxtronik_220131_0144_dhw_charging_pump
-                name: "Tapwater Pomp (BUP)"
-              - entity: binary_sensor.luxtronik_220131_0144_additional_heat_generator
-                name: "Elektrisch Element (ZWE)"
-
-      - type: grid
-        column_span: 1
-        cards:
-          - type: heading
-            heading: Dagelijks Energieverbruik per Bedrijfsstand (14 dagen)
-            icon: mdi:chart-bar-stacked
-          - type: statistics-graph
-            title: "5. Energieverbruik per Modus per Dag (kWh)"
-            grid_options:
-              columns: 12
-            period: day
-            days_to_show: 14
-            stat_types:
-              - change
-            chart_type: bar
-            entities:
-              - entity: sensor.warmtepomp_energie_heating
-                name: "1. Verwarmen (CV / Vloer)"
-              - entity: sensor.warmtepomp_energie_hot_water
-                name: "2. Warm Tapwater (DHW)"
-              - entity: sensor.warmtepomp_energie_cooling
-                name: "3. Passief Koelen"
-              - entity: sensor.warmtepomp_energie_aux_heater
-                name: "4. Elektrisch Element (ZWE)"
-              - entity: sensor.warmtepomp_energie_circulation
-                name: "5. Circulatiepompen (Zonder Comp.)"
-              - entity: sensor.warmtepomp_energie_standby
-                name: "6. Puur Standby"
+          - type: grid
+            columns: 2
+            square: false
+            cards:
+              - type: history-graph
+                title: "2. Tijdlijn Bedrijfsstanden, Energietarief & Pompen/Relais (48u)"
+                hours_to_show: 48
+                entities:
+                  - entity: sensor.luxtronik_220131_0144_status
+                    name: "Luxtronik Status"
+                  - entity: select.warmtepomp_energie
+                    name: "Actief Energietarief"
+                  - entity: binary_sensor.luxtronik_220131_0144_compressor
+                    name: "Compressor 1"
+                  - entity: binary_sensor.luxtronik_220131_0144_circulation_pump_heating
+                    name: "CV Pomp (HUP)"
+                  - entity: binary_sensor.luxtronik_220131_0144_additional_circulation_pump
+                    name: "Vloer Pomp (ZUP)"
+                  - entity: binary_sensor.luxtronik_220131_0144_dhw_charging_pump
+                    name: "Tapwater Pomp (BUP)"
+                  - entity: binary_sensor.luxtronik_220131_0144_additional_heat_generator
+                    name: "Elektrisch Element (ZWE)"
+              - type: statistics-graph
+                title: "5. Energieverbruik per Modus per Dag (kWh)"
+                period: day
+                days_to_show: 14
+                stat_types:
+                  - change
+                chart_type: bar
+                entities:
+                  - entity: sensor.warmtepomp_energie_heating
+                    name: "1. Verwarmen (CV / Vloer)"
+                  - entity: sensor.warmtepomp_energie_hot_water
+                    name: "2. Warm Tapwater (DHW)"
+                  - entity: sensor.warmtepomp_energie_cooling
+                    name: "3. Passief Koelen"
+                  - entity: sensor.warmtepomp_energie_aux_heater
+                    name: "4. Elektrisch Element (ZWE)"
+                  - entity: sensor.warmtepomp_energie_circulation
+                    name: "5. Circulatiepompen (Zonder Comp.)"
+                  - entity: sensor.warmtepomp_energie_standby
+                    name: "6. Puur Standby"
