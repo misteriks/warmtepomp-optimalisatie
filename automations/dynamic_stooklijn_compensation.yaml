@@ -1,0 +1,51 @@
+# Automation: Dynamic Room Temperature Compensation for Luxtronik Heat Pump
+# Adjusts number.luxtronik_220131_0144_heating_target_correction based on living room temperature
+# to prevent overheating beyond 21.5°C - 22.0°C.
+
+alias: "Warmtepomp: Dynamische Ruimtecompensatie"
+description: "Dynamische stooklijn correctie op basis van woonkamertemperatuur om oververwarming boven 22°C te voorkomen."
+mode: restart
+
+trigger:
+  - platform: numeric_state
+    entity_id: sensor.temperatuur_woonkamer_temperature
+    above: 22.2
+    id: "high_temp"
+  - platform: numeric_state
+    entity_id: sensor.temperatuur_woonkamer_temperature
+    above: 23.0
+    id: "severe_temp"
+  - platform: numeric_state
+    entity_id: sensor.temperatuur_woonkamer_temperature
+    below: 21.2
+    id: "normal_temp"
+
+action:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: "severe_temp"
+        sequence:
+          - action: number.set_value
+            target:
+              entity_id: number.luxtronik_220131_0144_heating_target_correction
+            data:
+              value: -2.0
+      - conditions:
+          - condition: trigger
+            id: "high_temp"
+        sequence:
+          - action: number.set_value
+            target:
+              entity_id: number.luxtronik_220131_0144_heating_target_correction
+            data:
+              value: -1.0
+      - conditions:
+          - condition: trigger
+            id: "normal_temp"
+        sequence:
+          - action: number.set_value
+            target:
+              entity_id: number.luxtronik_220131_0144_heating_target_correction
+            data:
+              value: 0.0

@@ -1,0 +1,244 @@
+# Alpha Innotec WZS 81H/K Diagnostics & Control Dashboard
+# Lovelace Dashboard YAML Definition for Home Assistant
+# Card Dependencies:
+#   - custom:luxtronik-flow-card (/local/ha-luxtronik-flow-card/luxtronik-flow-card.js)
+#   - custom:plotly-graph (HACS: dbuezas/lovelace-plotly-graph-card)
+
+title: Warmtepomp
+path: warmtepomp
+icon: mdi:heat-pump
+type: sections
+
+sections:
+  - column_span: 2
+    cards:
+      - type: heading
+        heading: Hydraulisch Systeemschema
+      - type: custom:luxtronik-flow-card
+        title: Alpha Innotec WZS 81H/K
+        ground_loops: 2
+        grid_options:
+          columns: full
+        entities:
+          status: sensor.luxtronik_220131_0144_status
+          flow_temp: sensor.luxtronik_220131_0144_flow_in_temperature
+          return_temp: sensor.luxtronik_220131_0144_flow_out_temperature
+          return_target_temp: sensor.luxtronik_220131_0144_flow_out_temperature_target
+          outdoor_temp: sensor.luxtronik_220131_0144_outdoor_temperature
+          room_temp: sensor.temperatuur_woonkamer_temperature
+          dhw_temp: sensor.luxtronik_220131_0144_dhw_temperature
+          dhw_target_temp: number.luxtronik_220131_0144_dhw_target_temperature
+          heat_source_in_temp: sensor.luxtronik_220131_0144_heat_source_input_temperature
+          heat_source_out_temp: sensor.luxtronik_220131_0144_heat_source_output_temperature
+          compressor: binary_sensor.luxtronik_220131_0144_compressor
+          dhw_pump: binary_sensor.luxtronik_220131_0144_dhw_charging_pump
+          heating_pump: binary_sensor.luxtronik_220131_0144_circulation_pump_heating
+          aux_heater: binary_sensor.luxtronik_220131_0144_additional_heat_generator
+          power: sensor.energymonitor_warmtepomp_total_active_power
+          energy: sensor.energymonitor_warmtepomp_total_active_energy
+
+  - column_span: 2
+    cards:
+      - type: heading
+        heading: Stooklijn & Instellingen
+      - type: entities
+        title: Stooklijn Parameters
+        show_header_toggle: false
+        entities:
+          - entity: number.luxtronik_220131_0144_heating_curve_end_temperature
+            name: "Stooklijn Eindpunt (-20°C)"
+            icon: mdi:chart-bell-curve
+          - entity: number.luxtronik_220131_0144_heating_curve_parallel_shift_temperature
+            name: "Parallelverschuiving (Voetpunt)"
+            icon: mdi:arrow-expand-vertical
+          - entity: number.luxtronik_220131_0144_dhw_target_temperature
+            name: "Tapwater Doeltemperatuur"
+            icon: mdi:water-boiler
+          - entity: number.luxtronik_220131_0144_dhw_hysteresis
+            name: "Tapwater Hysterese"
+            icon: mdi:delta
+          - entity: number.luxtronik_220131_0144_cooling_threshold_temperature
+            name: "Koelen Buitentemp Drempel"
+            icon: mdi:snowflake-thermometer
+      - type: entities
+        title: Stroomverbruik (Shelly 3-Fase)
+        show_header_toggle: false
+        entities:
+          - entity: sensor.energymonitor_warmtepomp_total_active_power
+            name: "Totaal Actueel Vermogen"
+            icon: mdi:lightning-bolt
+          - entity: sensor.energymonitor_warmtepomp_phase_a_active_power
+            name: "Fase A Vermogen"
+            icon: mdi:numeric-1-circle
+          - entity: sensor.energymonitor_warmtepomp_phase_b_active_power
+            name: "Fase B Vermogen"
+            icon: mdi:numeric-2-circle
+          - entity: sensor.energymonitor_warmtepomp_phase_c_active_power
+            name: "Fase C Vermogen"
+            icon: mdi:numeric-3-circle
+          - entity: sensor.energymonitor_warmtepomp_total_active_energy
+            name: "Totaal Energieverbruik"
+            icon: mdi:chart-line
+
+  - column_span: 2
+    cards:
+      - type: heading
+        heading: Systeemstatistieken & Pompen
+      - type: entities
+        title: Compressor & Draaiuren
+        show_header_toggle: false
+        entities:
+          - entity: sensor.luxtronik_220131_0144_compressor1_impulses
+            name: "Aantal Starts (Impulsen)"
+            icon: mdi:counter
+          - entity: sensor.luxtronik_220131_0144_compressor1_operation_hours
+            name: "Draaiuren Compressor 1"
+            icon: mdi:clock-outline
+          - entity: sensor.luxtronik_220131_0144_operation_hours_heating
+            name: "Draaiuren Verwarmen"
+            icon: mdi:radiator
+          - entity: sensor.luxtronik_220131_0144_dhw_operation_hours
+            name: "Draaiuren Tapwater"
+            icon: mdi:water-boiler
+          - entity: sensor.luxtronik_220131_0144_additional_heat_generator_operation_hours
+            name: "Draaiuren Elektrisch Element (ZWE)"
+            icon: mdi:lightning-bolt
+          - entity: sensor.luxtronik_220131_0144_error_reason
+            name: "Laatste Storingscode"
+            icon: mdi:alert-circle
+      - type: entities
+        title: Pompen & Relais
+        show_header_toggle: false
+        entities:
+          - entity: binary_sensor.luxtronik_220131_0144_circulation_pump_heating
+            name: "CV Circulatiepomp (HUP)"
+            icon: mdi:pump
+          - entity: binary_sensor.luxtronik_220131_0144_additional_circulation_pump
+            name: "Extra Circulatiepomp (ZUP)"
+            icon: mdi:pump
+          - entity: binary_sensor.luxtronik_220131_0144_dhw_charging_pump
+            name: "Tapwater Laadpomp (BUP)"
+            icon: mdi:pump
+          - entity: binary_sensor.luxtronik_220131_0144_additional_heat_generator
+            name: "Elektrisch Element Actief (ZWE)"
+            icon: mdi:heating-coil
+          - entity: binary_sensor.luxtronik_220131_0144_evu_unlocked
+            name: "EVU Vrijgave (Geen Netblokkade)"
+            icon: mdi:power-plug
+
+  - column_span: 4
+    cards:
+      - type: custom:plotly-graph
+        title: "Stooklijn, Kamertemperatuur & Systeemdynamiek (48u)"
+        hours_to_show: 48
+        refresh_interval: 60
+        grid_options:
+          columns: full
+        layout:
+          height: 400
+          hovermode: x unified
+          margin:
+            l: 40
+            r: 30
+            t: 40
+            b: 40
+          legend:
+            orientation: h
+            y: -0.2
+          yaxis:
+            title: "Temperatuur (°C)"
+            fixedrange: false
+          yaxis2:
+            title: "Compressor"
+            overlaying: y
+            side: right
+            showgrid: false
+            showticklabels: false
+            range: [-0.1, 1.1]
+        entities:
+          - entity: sensor.temperatuur_woonkamer_temperature
+            name: "Woonkamer (Ruimte)"
+            line:
+              color: "#2ecc71"
+              width: 3
+          - entity: sensor.luxtronik_220131_0144_outdoor_temperature
+            name: "Buitentemperatuur"
+            line:
+              color: "#3498db"
+              width: 2
+          - entity: sensor.luxtronik_220131_0144_flow_out_temperature_target
+            name: "Retour Doel (Soll)"
+            line:
+              color: "#e67e22"
+              width: 2
+              dash: dash
+          - entity: sensor.luxtronik_220131_0144_flow_out_temperature
+            name: "Retour Werkelijk"
+            line:
+              color: "#e74c3c"
+              width: 2
+          - entity: sensor.luxtronik_220131_0144_flow_in_temperature
+            name: "Aanvoertemperatuur"
+            line:
+              color: "#9b59b6"
+              width: 2
+          - entity: sensor.luxtronik_220131_0144_dhw_temperature
+            name: "Tapwater"
+            line:
+              color: "#f1c40f"
+              width: 2
+          - entity: binary_sensor.luxtronik_220131_0144_compressor
+            name: "Compressor Actief"
+            yaxis: y2
+            fill: tozeroy
+            fillcolor: "rgba(46, 204, 113, 0.15)"
+            line:
+              color: "#2ecc71"
+              width: 1
+
+  - column_span: 4
+    cards:
+      - type: custom:plotly-graph
+        title: "Bodemwisselaar & Elektrisch Vermogen (48u)"
+        hours_to_show: 48
+        refresh_interval: 60
+        grid_options:
+          columns: full
+        layout:
+          height: 320
+          hovermode: x unified
+          margin:
+            l: 40
+            r: 50
+            t: 40
+            b: 40
+          legend:
+            orientation: h
+            y: -0.2
+          yaxis:
+            title: "Temperatuur (°C)"
+          yaxis2:
+            title: "Vermogen (W)"
+            overlaying: y
+            side: right
+            showgrid: false
+        entities:
+          - entity: sensor.luxtronik_220131_0144_heat_source_input_temperature
+            name: "Bron Inlaattemp (Bodem)"
+            line:
+              color: "#00d2d3"
+              width: 2.5
+          - entity: sensor.luxtronik_220131_0144_heat_source_output_temperature
+            name: "Bron Uitlaattemp (Retour)"
+            line:
+              color: "#ff9f43"
+              width: 2.5
+          - entity: sensor.energymonitor_warmtepomp_total_active_power
+            name: "Elek. Vermogen Shelly (W)"
+            yaxis: y2
+            fill: tozeroy
+            fillcolor: "rgba(84, 160, 255, 0.1)"
+            line:
+              color: "#54a0ff"
+              width: 1.5
+              dash: dot
