@@ -1,223 +1,453 @@
-# Alpha Innotec WZS 81H/K Sensor-Only Telemetry Dashboard (Phase 1)
-# Deployed to Home Assistant: dashboard-test / view: warmtepomp
+# Alpha Innotec WZS 81H/K Telemetry Dashboard (Phase 1 Sensors + Phase 2 Diagnostic Charts)
+# Deployed to Home Assistant: dashboard-test
+#   - views[0]: Warmtepomp (/dashboard-test/warmtepomp) -> Sensor-only entities cards
+#   - views[1]: Warmtepomp Grafieken (/dashboard-test/warmtepomp-grafieken) -> 48h/14d Diagnostic Charts
 
-title: Warmtepomp
-path: warmtepomp
-icon: mdi:heat-pump
-type: sections
-
-sections:
-  - type: grid
-    column_span: 1
-    cards:
-      - type: heading
-        heading: Energie & Vermogen per Bedrijfsstand
-        icon: mdi:lightning-bolt
-      - type: entities
-        title: Actuele Energiestatus & Totaal
-        show_header_toggle: false
-        entities:
-          - entity: select.warmtepomp_energie
-            name: "Actieve Energiemodus (Tarief)"
-            icon: mdi:state-machine
-          - entity: sensor.luxtronik_220131_0144_status
-            name: "Luxtronik Bedrijfsstatus"
-            icon: mdi:heat-pump
-          - entity: sensor.energymonitor_warmtepomp_total_active_power
-            name: "Actueel Totaal Vermogen"
-            icon: mdi:flash
-          - entity: sensor.warmtepomp_totaal_energie_dagelijks
-            name: "Totaal Energie Vandaag (Dagelijks)"
-            icon: mdi:calendar-today
-          - entity: sensor.energymonitor_warmtepomp_total_active_energy
-            name: "Totaal Energie Cumulatief (Shelly)"
-            icon: mdi:counter
-      - type: entities
-        title: Energieverbruik per Modus (kWh)
-        show_header_toggle: false
-        entities:
-          - entity: sensor.warmtepomp_energie_heating
-            name: "1. Verwarmen (CV / Vloer)"
-            icon: mdi:radiator
-          - entity: sensor.warmtepomp_energie_hot_water
-            name: "2. Warm Tapwater (DHW Boiler)"
-            icon: mdi:water-boiler
-          - entity: sensor.warmtepomp_energie_cooling
-            name: "3. Passief Koelen (Comfort Board)"
-            icon: mdi:snowflake
-          - entity: sensor.warmtepomp_energie_aux_heater
-            name: "4. Elektrisch Element (ZWE 6 kW)"
-            icon: mdi:heating-coil
-          - entity: sensor.warmtepomp_energie_circulation
-            name: "5. Circulatiepompen (Zonder Compressor)"
-            icon: mdi:pump
-          - entity: sensor.warmtepomp_energie_standby
-            name: "6. Puur Standby (Rust)"
-            icon: mdi:power-sleep
-      - type: entities
-        title: Shelly 3-Fase Details
-        show_header_toggle: false
-        entities:
-          - entity: sensor.energymonitor_warmtepomp_phase_a_active_power
-            name: "Fase A Vermogen"
-            icon: mdi:numeric-1-circle
-          - entity: sensor.energymonitor_warmtepomp_phase_b_active_power
-            name: "Fase B Vermogen"
-            icon: mdi:numeric-2-circle
-          - entity: sensor.energymonitor_warmtepomp_phase_c_active_power
-            name: "Fase C Vermogen"
-            icon: mdi:numeric-3-circle
-          - entity: sensor.energymonitor_warmtepomp_phase_a_total_active_energy
-            name: "Fase A Energie Totaal"
-            icon: mdi:numeric-1-box-outline
-          - entity: sensor.energymonitor_warmtepomp_phase_b_total_active_energy
-            name: "Fase B Energie Totaal"
-            icon: mdi:numeric-2-box-outline
-          - entity: sensor.energymonitor_warmtepomp_phase_c_total_active_energy
-            name: "Fase C Energie Totaal"
-            icon: mdi:numeric-3-box-outline
-
-  - type: grid
-    column_span: 1
-    cards:
-      - type: heading
-        heading: OpenEnergyMonitor Diagnostiek & Temperaturen
-        icon: mdi:thermometer-lines
-      - type: entities
-        title: Efficiëntie & Thermische KPI's
-        show_header_toggle: false
-        entities:
-          - entity: sensor.warmtepomp_geschatte_cop
-            name: "Geschatte Real-time COP (Carnot)"
-            icon: mdi:gauge
-          - entity: sensor.warmtepomp_condensor_delta_t
-            name: "Condensor ΔT (Aanvoer - Retour)"
-            icon: mdi:thermometer-lines
-          - entity: sensor.warmtepomp_bodembron_delta_t
-            name: "Bodembron ΔT (Bron In - Bron Uit)"
-            icon: mdi:waves-arrow-up
-          - entity: sensor.warmtepomp_graaddagen_hdd18
-            name: "Graaddagen Gewicht (HDD18)"
-            icon: mdi:snowflake-thermometer
-          - entity: sensor.warmtepomp_gemiddelde_compressor_runduur
-            name: "Gemiddelde Compressor Runduur"
-            icon: mdi:timer-outline
-      - type: entities
-        title: Temperatuursensoren
-        show_header_toggle: false
-        entities:
-          - entity: sensor.temperatuur_woonkamer_temperature
-            name: "Woonkamer Temperatuur"
-            icon: mdi:home-thermometer
-          - entity: sensor.luxtronik_220131_0144_outdoor_temperature
-            name: "Buitentemperatuur (Actueel)"
-            icon: mdi:sun-thermometer
-          - entity: sensor.luxtronik_220131_0144_outdoor_temperature_average
-            name: "Buitentemperatuur (Gemiddeld)"
-            icon: mdi:thermometer-auto
-          - entity: sensor.luxtronik_220131_0144_flow_in_temperature
-            name: "CV Aanvoertemperatuur (Flow In)"
-            icon: mdi:thermometer-chevron-up
-          - entity: sensor.luxtronik_220131_0144_flow_out_temperature
-            name: "CV Retourtemperatuur (Werkelijk)"
-            icon: mdi:thermometer-chevron-down
-          - entity: sensor.luxtronik_220131_0144_flow_out_temperature_target
-            name: "CV Retour Doeltemperatuur (Soll)"
-            icon: mdi:bullseye-arrow
-          - entity: sensor.luxtronik_220131_0144_dhw_temperature
-            name: "Tapwater Temperatuur (DHW Boiler)"
-            icon: mdi:water-thermometer
-          - entity: sensor.luxtronik_220131_0144_heat_source_input_temperature
-            name: "Bodembron Inlaattemperatuur (Bron In)"
-            icon: mdi:arrow-up-bold-circle-outline
-          - entity: sensor.luxtronik_220131_0144_heat_source_output_temperature
-            name: "Bodembron Uitlaattemperatuur (Bron Uit)"
-            icon: mdi:arrow-down-bold-circle-outline
-          - entity: sensor.luxtronik_220131_0144_hot_gas_temperature
-            name: "Heetgastemperatuur (Compressor)"
-            icon: mdi:fire
-
-  - type: grid
-    column_span: 1
-    cards:
-      - type: heading
-        heading: Instellingen, Pompen & Draaiuren
-        icon: mdi:tune
-      - type: entities
-        title: Stooklijn & Tapwater Parameters
-        show_header_toggle: false
-        entities:
-          - entity: number.luxtronik_220131_0144_heating_curve_end_temperature
-            name: "Stooklijn Eindpunt (-20°C)"
-            icon: mdi:chart-bell-curve
-          - entity: number.luxtronik_220131_0144_heating_curve_parallel_shift_temperature
-            name: "Parallelverschuiving (Voetpunt)"
-            icon: mdi:arrow-expand-vertical
-          - entity: number.luxtronik_220131_0144_heating_target_correction
-            name: "Stooklijn Correctie (RFV-DK / Offset)"
-            icon: mdi:knob
-          - entity: number.luxtronik_220131_0144_heating_hysteresis
-            name: "Verwarmen Hysterese"
-            icon: mdi:delta
-          - entity: number.luxtronik_220131_0144_dhw_target_temperature
-            name: "Tapwater Doeltemperatuur (DHW)"
-            icon: mdi:water-boiler
-          - entity: number.luxtronik_220131_0144_dhw_hysteresis
-            name: "Tapwater Hysterese"
-            icon: mdi:delta
-          - entity: number.luxtronik_220131_0144_cooling_threshold_temperature
-            name: "Koelen Buitentemp Drempel"
-            icon: mdi:snowflake-thermometer
-      - type: entities
-        title: Relais & Pompen
-        show_header_toggle: false
-        entities:
-          - entity: binary_sensor.luxtronik_220131_0144_compressor
-            name: "Compressor 1 Actief"
-            icon: mdi:engine
-          - entity: binary_sensor.luxtronik_220131_0144_circulation_pump_heating
-            name: "CV Circulatiepomp (HUP)"
-            icon: mdi:pump
-          - entity: binary_sensor.luxtronik_220131_0144_additional_circulation_pump
-            name: "Vloerverwarming Pomp (ZUP)"
-            icon: mdi:pump
-          - entity: binary_sensor.luxtronik_220131_0144_dhw_charging_pump
-            name: "Tapwater Laadpomp (BUP)"
-            icon: mdi:pump
-          - entity: binary_sensor.luxtronik_220131_0144_additional_heat_generator
-            name: "Elektrisch Element Actief (ZWE)"
-            icon: mdi:heating-coil
-          - entity: binary_sensor.luxtronik_220131_0144_approval_cooling
-            name: "Vrijgave Passief Koelen"
-            icon: mdi:snowflake-check
-          - entity: binary_sensor.luxtronik_220131_0144_evu_unlocked
-            name: "EVU Vrijgave (Geen Netblokkade)"
-            icon: mdi:power-plug
-      - type: entities
-        title: Draaiuren, Starts & Systeem
-        show_header_toggle: false
-        entities:
-          - entity: sensor.luxtronik_220131_0144_compressor1_impulses
-            name: "Compressor Starts (Impulsen)"
-            icon: mdi:counter
-          - entity: sensor.luxtronik_220131_0144_compressor1_operation_hours
-            name: "Draaiuren Compressor Totaal"
-            icon: mdi:clock-outline
-          - entity: sensor.luxtronik_220131_0144_operation_hours_heating
-            name: "Draaiuren Verwarmen"
-            icon: mdi:radiator
-          - entity: sensor.luxtronik_220131_0144_dhw_operation_hours
-            name: "Draaiuren Warm Tapwater"
-            icon: mdi:water-boiler
-          - entity: sensor.luxtronik_220131_0144_operation_hours_cooling
-            name: "Draaiuren Passief Koelen"
-            icon: mdi:snowflake
-          - entity: sensor.luxtronik_220131_0144_additional_heat_generator_operation_hours
-            name: "Draaiuren Elektrisch Element (ZWE)"
+views:
+  - title: Warmtepomp
+    path: warmtepomp
+    icon: mdi:heat-pump
+    type: sections
+    sections:
+      - type: grid
+        column_span: 1
+        cards:
+          - type: heading
+            heading: Energie & Vermogen per Bedrijfsstand
             icon: mdi:lightning-bolt
-          - entity: update.luxtronik_220131_0144_firmware
-            name: "Luxtronik Firmware Versie"
-            icon: mdi:chip
-          - entity: sensor.luxtronik_220131_0144_error_reason
-            name: "Laatste Storingscode"
-            icon: mdi:alert-circle-outline
+          - type: entities
+            title: Actuele Energiestatus & Totaal
+            show_header_toggle: false
+            entities:
+              - entity: select.warmtepomp_energie
+                name: "Actieve Energiemodus (Tarief)"
+                icon: mdi:state-machine
+              - entity: sensor.luxtronik_220131_0144_status
+                name: "Luxtronik Bedrijfsstatus"
+                icon: mdi:heat-pump
+              - entity: sensor.energymonitor_warmtepomp_total_active_power
+                name: "Actueel Totaal Vermogen"
+                icon: mdi:flash
+              - entity: sensor.warmtepomp_totaal_energie_dagelijks
+                name: "Totaal Energie Vandaag (Dagelijks)"
+                icon: mdi:calendar-today
+              - entity: sensor.energymonitor_warmtepomp_total_active_energy
+                name: "Totaal Energie Cumulatief (Shelly)"
+                icon: mdi:counter
+          - type: entities
+            title: Energieverbruik per Modus (kWh)
+            show_header_toggle: false
+            entities:
+              - entity: sensor.warmtepomp_energie_heating
+                name: "1. Verwarmen (CV / Vloer)"
+                icon: mdi:radiator
+              - entity: sensor.warmtepomp_energie_hot_water
+                name: "2. Warm Tapwater (DHW Boiler)"
+                icon: mdi:water-boiler
+              - entity: sensor.warmtepomp_energie_cooling
+                name: "3. Passief Koelen (Comfort Board)"
+                icon: mdi:snowflake
+              - entity: sensor.warmtepomp_energie_aux_heater
+                name: "4. Elektrisch Element (ZWE 6 kW)"
+                icon: mdi:heating-coil
+              - entity: sensor.warmtepomp_energie_circulation
+                name: "5. Circulatiepompen (Zonder Compressor)"
+                icon: mdi:pump
+              - entity: sensor.warmtepomp_energie_standby
+                name: "6. Puur Standby (Rust)"
+                icon: mdi:power-sleep
+          - type: entities
+            title: Shelly 3-Fase Details
+            show_header_toggle: false
+            entities:
+              - entity: sensor.energymonitor_warmtepomp_phase_a_active_power
+                name: "Fase A Vermogen"
+                icon: mdi:numeric-1-circle
+              - entity: sensor.energymonitor_warmtepomp_phase_b_active_power
+                name: "Fase B Vermogen"
+                icon: mdi:numeric-2-circle
+              - entity: sensor.energymonitor_warmtepomp_phase_c_active_power
+                name: "Fase C Vermogen"
+                icon: mdi:numeric-3-circle
+              - entity: sensor.energymonitor_warmtepomp_phase_a_total_active_energy
+                name: "Fase A Energie Totaal"
+                icon: mdi:numeric-1-box-outline
+              - entity: sensor.energymonitor_warmtepomp_phase_b_total_active_energy
+                name: "Fase B Energie Totaal"
+                icon: mdi:numeric-2-box-outline
+              - entity: sensor.energymonitor_warmtepomp_phase_c_total_active_energy
+                name: "Fase C Energie Totaal"
+                icon: mdi:numeric-3-box-outline
+
+      - type: grid
+        column_span: 1
+        cards:
+          - type: heading
+            heading: OpenEnergyMonitor Diagnostiek & Temperaturen
+            icon: mdi:thermometer-lines
+          - type: entities
+            title: Efficiëntie & Thermische KPI's
+            show_header_toggle: false
+            entities:
+              - entity: sensor.warmtepomp_geschatte_cop
+                name: "Geschatte Real-time COP (Carnot)"
+                icon: mdi:gauge
+              - entity: sensor.warmtepomp_condensor_delta_t
+                name: "Condensor ΔT (Aanvoer - Retour)"
+                icon: mdi:thermometer-lines
+              - entity: sensor.warmtepomp_bodembron_delta_t
+                name: "Bodembron ΔT (Bron In - Bron Uit)"
+                icon: mdi:waves-arrow-up
+              - entity: sensor.warmtepomp_graaddagen_hdd18
+                name: "Graaddagen Gewicht (HDD18)"
+                icon: mdi:snowflake-thermometer
+              - entity: sensor.warmtepomp_gemiddelde_compressor_runduur
+                name: "Gemiddelde Compressor Runduur"
+                icon: mdi:timer-outline
+          - type: entities
+            title: Temperatuursensoren
+            show_header_toggle: false
+            entities:
+              - entity: sensor.temperatuur_woonkamer_temperature
+                name: "Woonkamer Temperatuur"
+                icon: mdi:home-thermometer
+              - entity: sensor.luxtronik_220131_0144_outdoor_temperature
+                name: "Buitentemperatuur (Actueel)"
+                icon: mdi:sun-thermometer
+              - entity: sensor.luxtronik_220131_0144_outdoor_temperature_average
+                name: "Buitentemperatuur (Gemiddeld)"
+                icon: mdi:thermometer-auto
+              - entity: sensor.luxtronik_220131_0144_flow_in_temperature
+                name: "CV Aanvoertemperatuur (Flow In)"
+                icon: mdi:thermometer-chevron-up
+              - entity: sensor.luxtronik_220131_0144_flow_out_temperature
+                name: "CV Retourtemperatuur (Werkelijk)"
+                icon: mdi:thermometer-chevron-down
+              - entity: sensor.luxtronik_220131_0144_flow_out_temperature_target
+                name: "CV Retour Doeltemperatuur (Soll)"
+                icon: mdi:bullseye-arrow
+              - entity: sensor.luxtronik_220131_0144_dhw_temperature
+                name: "Tapwater Temperatuur (DHW Boiler)"
+                icon: mdi:water-thermometer
+              - entity: sensor.luxtronik_220131_0144_heat_source_input_temperature
+                name: "Bodembron Inlaattemperatuur (Bron In)"
+                icon: mdi:arrow-up-bold-circle-outline
+              - entity: sensor.luxtronik_220131_0144_heat_source_output_temperature
+                name: "Bodembron Uitlaattemperatuur (Bron Uit)"
+                icon: mdi:arrow-down-bold-circle-outline
+              - entity: sensor.luxtronik_220131_0144_hot_gas_temperature
+                name: "Heetgastemperatuur (Compressor)"
+                icon: mdi:fire
+
+      - type: grid
+        column_span: 1
+        cards:
+          - type: heading
+            heading: Instellingen, Pompen & Draaiuren
+            icon: mdi:tune
+          - type: entities
+            title: Stooklijn & Tapwater Parameters
+            show_header_toggle: false
+            entities:
+              - entity: number.luxtronik_220131_0144_heating_curve_end_temperature
+                name: "Stooklijn Eindpunt (-20°C)"
+                icon: mdi:chart-bell-curve
+              - entity: number.luxtronik_220131_0144_heating_curve_parallel_shift_temperature
+                name: "Parallelverschuiving (Voetpunt)"
+                icon: mdi:arrow-expand-vertical
+              - entity: number.luxtronik_220131_0144_heating_target_correction
+                name: "Stooklijn Correctie (RFV-DK / Offset)"
+                icon: mdi:knob
+              - entity: number.luxtronik_220131_0144_heating_hysteresis
+                name: "Verwarmen Hysterese"
+                icon: mdi:delta
+              - entity: number.luxtronik_220131_0144_dhw_target_temperature
+                name: "Tapwater Doeltemperatuur (DHW)"
+                icon: mdi:water-boiler
+              - entity: number.luxtronik_220131_0144_dhw_hysteresis
+                name: "Tapwater Hysterese"
+                icon: mdi:delta
+              - entity: number.luxtronik_220131_0144_cooling_threshold_temperature
+                name: "Koelen Buitentemp Drempel"
+                icon: mdi:snowflake-thermometer
+          - type: entities
+            title: Relais & Pompen
+            show_header_toggle: false
+            entities:
+              - entity: binary_sensor.luxtronik_220131_0144_compressor
+                name: "Compressor 1 Actief"
+                icon: mdi:engine
+              - entity: binary_sensor.luxtronik_220131_0144_circulation_pump_heating
+                name: "CV Circulatiepomp (HUP)"
+                icon: mdi:pump
+              - entity: binary_sensor.luxtronik_220131_0144_additional_circulation_pump
+                name: "Vloerverwarming Pomp (ZUP)"
+                icon: mdi:pump
+              - entity: binary_sensor.luxtronik_220131_0144_dhw_charging_pump
+                name: "Tapwater Laadpomp (BUP)"
+                icon: mdi:pump
+              - entity: binary_sensor.luxtronik_220131_0144_additional_heat_generator
+                name: "Elektrisch Element Actief (ZWE)"
+                icon: mdi:heating-coil
+              - entity: binary_sensor.luxtronik_220131_0144_approval_cooling
+                name: "Vrijgave Passief Koelen"
+                icon: mdi:snowflake-check
+              - entity: binary_sensor.luxtronik_220131_0144_evu_unlocked
+                name: "EVU Vrijgave (Geen Netblokkade)"
+                icon: mdi:power-plug
+          - type: entities
+            title: Draaiuren, Starts & Systeem
+            show_header_toggle: false
+            entities:
+              - entity: sensor.luxtronik_220131_0144_compressor1_impulses
+                name: "Compressor Starts (Impulsen)"
+                icon: mdi:counter
+              - entity: sensor.luxtronik_220131_0144_compressor1_operation_hours
+                name: "Draaiuren Compressor Totaal"
+                icon: mdi:clock-outline
+              - entity: sensor.luxtronik_220131_0144_operation_hours_heating
+                name: "Draaiuren Verwarmen"
+                icon: mdi:radiator
+              - entity: sensor.luxtronik_220131_0144_dhw_operation_hours
+                name: "Draaiuren Warm Tapwater"
+                icon: mdi:water-boiler
+              - entity: sensor.luxtronik_220131_0144_operation_hours_cooling
+                name: "Draaiuren Passief Koelen"
+                icon: mdi:snowflake
+              - entity: sensor.luxtronik_220131_0144_additional_heat_generator_operation_hours
+                name: "Draaiuren Elektrisch Element (ZWE)"
+                icon: mdi:lightning-bolt
+              - entity: update.luxtronik_220131_0144_firmware
+                name: "Luxtronik Firmware Versie"
+                icon: mdi:chip
+              - entity: sensor.luxtronik_220131_0144_error_reason
+                name: "Laatste Storingscode"
+                icon: mdi:alert-circle-outline
+
+  - title: Warmtepomp Grafieken
+    path: warmtepomp-grafieken
+    icon: mdi:chart-timeline-variant-shimmer
+    type: sections
+    max_columns: 2
+    sections:
+      - type: grid
+        column_span: 2
+        cards:
+          - type: heading
+            heading: Thermische Balans, Stooklijn & Bedrijfsstanden (48 uur)
+            icon: mdi:chart-bell-curve-cumulative
+          - type: custom:plotly-graph
+            title: "1. Stooklijn, Watertemperaturen & Woonkamer vs. Vermogen (48u)"
+            hours_to_show: 48
+            refresh_interval: 30
+            layout:
+              height: 420
+              margin:
+                t: 40
+                b: 40
+                l: 50
+                r: 50
+              yaxis:
+                title: "Temperatuur (°C)"
+              yaxis2:
+                title: "Vermogen (kW)"
+                overlaying: y
+                side: right
+                rangemode: tozero
+              legend:
+                orientation: h
+                y: 1.15
+            entities:
+              - entity: sensor.temperatuur_woonkamer_temperature
+                name: "Woonkamer (°C)"
+                line:
+                  color: "#2ecc71"
+                  width: 3
+              - entity: sensor.luxtronik_220131_0144_flow_in_temperature
+                name: "CV Aanvoer Flow In (°C)"
+                line:
+                  color: "#e74c3c"
+                  width: 2
+              - entity: sensor.luxtronik_220131_0144_flow_out_temperature
+                name: "CV Retour Werkelijk (°C)"
+                line:
+                  color: "#3498db"
+                  width: 2
+              - entity: sensor.luxtronik_220131_0144_flow_out_temperature_target
+                name: "CV Retour Doel / Soll (°C)"
+                line:
+                  color: "#f39c12"
+                  width: 2
+                  dash: dash
+              - entity: sensor.luxtronik_220131_0144_outdoor_temperature
+                name: "Buiten Actueel (°C)"
+                line:
+                  color: "#95a5a6"
+                  width: 1.5
+              - entity: sensor.luxtronik_220131_0144_outdoor_temperature_average
+                name: "Buiten Gemiddeld (°C)"
+                line:
+                  color: "#7f8c8d"
+                  width: 1.5
+                  dash: dot
+              - entity: sensor.energymonitor_warmtepomp_total_active_power
+                name: "Elektrisch Vermogen (kW)"
+                yaxis: y2
+                fill: tozeroy
+                line:
+                  color: "rgba(155, 89, 182, 0.45)"
+                  width: 1
+          - type: history-graph
+            title: "2. Tijdlijn Bedrijfsstanden, Energietarief & Pompen/Relais (48u)"
+            hours_to_show: 48
+            entities:
+              - entity: sensor.luxtronik_220131_0144_status
+                name: "Luxtronik Status"
+              - entity: select.warmtepomp_energie
+                name: "Actief Energietarief"
+              - entity: binary_sensor.luxtronik_220131_0144_compressor
+                name: "Compressor 1"
+              - entity: binary_sensor.luxtronik_220131_0144_circulation_pump_heating
+                name: "CV Pomp (HUP)"
+              - entity: binary_sensor.luxtronik_220131_0144_additional_circulation_pump
+                name: "Vloer Pomp (ZUP)"
+              - entity: binary_sensor.luxtronik_220131_0144_dhw_charging_pump
+                name: "Tapwater Pomp (BUP)"
+              - entity: binary_sensor.luxtronik_220131_0144_additional_heat_generator
+                name: "Elektrisch Element (ZWE)"
+
+      - type: grid
+        column_span: 1
+        cards:
+          - type: heading
+            heading: Warmtewisselaars (ΔT) & Carnot COP (48 uur)
+            icon: mdi:waves-arrow-up
+          - type: custom:plotly-graph
+            title: "3. Condensor ΔT, Bodembron In/Uit & ΔT vs. Carnot COP (48u)"
+            hours_to_show: 48
+            refresh_interval: 30
+            layout:
+              height: 380
+              margin:
+                t: 40
+                b: 40
+                l: 50
+                r: 50
+              yaxis:
+                title: "Temp (°C) / Spread (K)"
+              yaxis2:
+                title: "Carnot COP"
+                overlaying: y
+                side: right
+                rangemode: tozero
+              legend:
+                orientation: h
+                y: 1.18
+            entities:
+              - entity: sensor.warmtepomp_condensor_delta_t
+                name: "Condensor ΔT (K)"
+                line:
+                  color: "#e67e22"
+                  width: 2.5
+              - entity: sensor.warmtepomp_bodembron_delta_t
+                name: "Bodembron ΔT (K)"
+                line:
+                  color: "#1abc9c"
+                  width: 2.5
+              - entity: sensor.luxtronik_220131_0144_heat_source_input_temperature
+                name: "Bodembron In (°C)"
+                line:
+                  color: "#2980b9"
+                  width: 1.5
+                  dash: dot
+              - entity: sensor.luxtronik_220131_0144_heat_source_output_temperature
+                name: "Bodembron Uit (°C)"
+                line:
+                  color: "#8e44ad"
+                  width: 1.5
+                  dash: dot
+              - entity: sensor.warmtepomp_geschatte_cop
+                name: "Geschatte COP (Carnot)"
+                yaxis: y2
+                line:
+                  color: "#27ae60"
+                  width: 2
+
+      - type: grid
+        column_span: 1
+        cards:
+          - type: heading
+            heading: Tapwater (DHW) & Heetgas Cyclus (48 uur)
+            icon: mdi:water-boiler
+          - type: custom:plotly-graph
+            title: "4. Tapwater Boiler, Doeltemp & Heetgas vs. Vermogen (48u)"
+            hours_to_show: 48
+            refresh_interval: 30
+            layout:
+              height: 380
+              margin:
+                t: 40
+                b: 40
+                l: 50
+                r: 50
+              yaxis:
+                title: "Temperatuur (°C)"
+              yaxis2:
+                title: "Vermogen (kW)"
+                overlaying: y
+                side: right
+                rangemode: tozero
+              legend:
+                orientation: h
+                y: 1.18
+            entities:
+              - entity: sensor.luxtronik_220131_0144_dhw_temperature
+                name: "Tapwater Boiler (°C)"
+                line:
+                  color: "#e74c3c"
+                  width: 2.5
+              - entity: number.luxtronik_220131_0144_dhw_target_temperature
+                name: "Tapwater Doel (°C)"
+                line:
+                  color: "#f39c12"
+                  width: 1.5
+                  dash: dash
+              - entity: sensor.luxtronik_220131_0144_hot_gas_temperature
+                name: "Heetgastemperatuur (°C)"
+                line:
+                  color: "#c0392b"
+                  width: 1.8
+              - entity: sensor.energymonitor_warmtepomp_total_active_power
+                name: "Elektrisch Vermogen (kW)"
+                yaxis: y2
+                fill: tozeroy
+                line:
+                  color: "rgba(155, 89, 182, 0.45)"
+                  width: 1
+
+      - type: grid
+        column_span: 2
+        cards:
+          - type: heading
+            heading: Dagelijks Energieverbruik per Bedrijfsstand (14 dagen)
+            icon: mdi:chart-bar-stacked
+          - type: statistics-graph
+            title: "5. Energieverbruik per Modus per Dag (kWh)"
+            period: day
+            days_to_show: 14
+            stat_types:
+              - change
+            chart_type: bar
+            entities:
+              - entity: sensor.warmtepomp_energie_heating
+                name: "1. Verwarmen (CV / Vloer)"
+              - entity: sensor.warmtepomp_energie_hot_water
+                name: "2. Warm Tapwater (DHW)"
+              - entity: sensor.warmtepomp_energie_cooling
+                name: "3. Passief Koelen"
+              - entity: sensor.warmtepomp_energie_aux_heater
+                name: "4. Elektrisch Element (ZWE)"
+              - entity: sensor.warmtepomp_energie_circulation
+                name: "5. Circulatiepompen (Zonder Comp.)"
+              - entity: sensor.warmtepomp_energie_standby
+                name: "6. Puur Standby"
