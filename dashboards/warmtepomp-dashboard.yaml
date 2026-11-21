@@ -90,19 +90,34 @@ views:
             show_header_toggle: false
             entities:
               - entity: sensor.warmtepomp_geschatte_cop
-                name: "Geschatte Real-time COP (Carnot)"
+                name: "Geschatte Real-time COP (Carnot Gecombineerd)"
                 icon: mdi:gauge
+              - entity: sensor.warmtepomp_cop_verwarmen
+                name: "COP Verwarmen (Steady-State)"
+                icon: mdi:radiator
+              - entity: sensor.warmtepomp_cop_tapwater
+                name: "COP Warm Tapwater (Steady-State)"
+                icon: mdi:water-boiler
               - entity: sensor.warmtepomp_condensor_delta_t
-                name: "Condensor ΔT (Aanvoer - Retour)"
+                name: "Condensor ΔT (Aanvoer - Retour Actief)"
                 icon: mdi:thermometer-lines
               - entity: sensor.warmtepomp_bodembron_delta_t
-                name: "Bodembron ΔT (Bron In - Bron Uit)"
+                name: "Bodembron ΔT (Bron In - Bron Uit Actief)"
                 icon: mdi:waves-arrow-up
+              - entity: sensor.warmtepomp_actieve_aanvoertemperatuur_verwarmen
+                name: "Actieve CV Aanvoer Verwarmen (Steady-State)"
+                icon: mdi:thermometer-chevron-up
+              - entity: sensor.warmtepomp_actieve_bodembron_inlaattemperatuur
+                name: "Actieve Bodembron Inlaat (Steady-State)"
+                icon: mdi:arrow-up-bold-circle-outline
+              - entity: sensor.warmtepomp_actieve_bodembron_uitlaattemperatuur
+                name: "Actieve Bodembron Uitlaat (Steady-State)"
+                icon: mdi:arrow-down-bold-circle-outline
               - entity: sensor.warmtepomp_graaddagen_hdd18
                 name: "Graaddagen Gewicht (HDD18)"
                 icon: mdi:snowflake-thermometer
               - entity: sensor.warmtepomp_gemiddelde_compressor_runduur
-                name: "Gemiddelde Compressor Runduur"
+                name: "Gemiddelde Compressor Runduur (Levensduur)"
                 icon: mdi:timer-outline
           - type: entities
             title: Temperatuursensoren

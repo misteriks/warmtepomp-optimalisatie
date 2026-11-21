@@ -87,11 +87,16 @@ This document catalogs all Home Assistant entities for the Alpha Innotec WZS 81H
 
 ---
 
-## 7. OpenEnergyMonitor Diagnostic Template Sensors
-| Entity ID | Unit | Formula / Description |
-| :--- | :--- | :--- |
-| `sensor.warmtepomp_geschatte_cop` | COP | Practical Carnot COP ($0.50 \times \frac{T_{\text{VL}} + 273.15}{(T_{\text{VL}} - T_{\text{brine, out}}) + 4.0}$) when compressor is running (`none` / `unknown` when idle so LTS hourly/daily `mean` excludes standby) |
-| `sensor.warmtepomp_condensor_delta_t` | K | Condenser temperature spread ($T_{\text{VL}} - T_{\text{RL}}$) |
-| `sensor.warmtepomp_bodembron_delta_t` | K | Ground loop brine temperature spread ($T_{\text{brine, in}} - T_{\text{brine, out}}$) |
-| `sensor.warmtepomp_graaddagen_hdd18` | °C | Instantaneous Heating Degree Days weight ($\max(0, 18.0 - T_{\text{outdoor}})$) |
-| `sensor.warmtepomp_gemiddelde_compressor_runduur` | min | Cumulative average compressor run duration per start ($\frac{\text{Hours} \times 60}{\text{Starts}}$) |
+## 7. OpenEnergyMonitor Diagnostic Template Sensors (Steady-State LTS Hygiene — Issue #4)
+| Entity ID | Entry ID | Unit | Formula / Steady-State Gating Logic |
+| :--- | :--- | :--- | :--- |
+| `sensor.warmtepomp_geschatte_cop` | `01M7XA0ZVAEZ4WFX6HEM9JW1S0` | COP | Combined steady-state Practical Carnot COP ($0.50 \times \frac{T_{\text{VL}} + 273.15}{(T_{\text{VL}} - T_{\text{brine, out}}) + 4.0}$) when compressor is running (`status_time >= 180`, $\Delta T_{\text{cond}} \ge 1.5\text{ K}$, $\Delta T_{\text{brine}} \ge 1.0\text{ K}$, plus $T_{\text{VL}} < 45^\circ\text{C}$ in `heating` or $T_{\text{VL}} \ge T_{\text{DHW}}$ in `hot_water`; `1.0` if ZWE only; `none` during startup/transition/idle) |
+| `sensor.warmtepomp_cop_verwarmen` | `01M7Z02H76733XD16C95QSJ5G1` | COP | Mode-specific steady-state Carnot COP **only** during `status == 'heating'` (`status_time >= 180`, $T_{\text{VL}} < 45^\circ\text{C}$, $\Delta T_{\text{cond}} \ge 1.5\text{ K}$, $\Delta T_{\text{brine}} \ge 1.0\text{ K}$, `ZWE == 'off'`), else `none` |
+| `sensor.warmtepomp_cop_tapwater` | `01M7Z02JYGG02C9WMYJ50YT27W` | COP | Mode-specific steady-state Carnot COP **only** during `status == 'hot_water'` (`status_time >= 180`, $T_{\text{VL}} \ge T_{\text{DHW}}$, $\Delta T_{\text{cond}} \ge 1.5\text{ K}$, $\Delta T_{\text{brine}} \ge 1.0\text{ K}$, `ZWE == 'off'`), else `none` |
+| `sensor.warmtepomp_condensor_delta_t` | `01M7XA0T9ZVCF13G20MMEH0JQ7` | K | Active steady-state condenser temperature spread ($T_{\text{VL}} - T_{\text{RL}}$) gated on `steady_heat or steady_dhw` (`status_time >= 180`, $\Delta T_{\text{cond}} \ge 1.5\text{ K}$, and $T_{\text{VL}} \ge T_{\text{DHW}}$ during `hot_water` to exclude `-10.7 K` 3-way valve transitions), else `none` |
+| `sensor.warmtepomp_bodembron_delta_t` | `01M7XA0WD13C8JG4SN2KKZSPBC` | K | Active steady-state ground loop brine spread ($T_{\text{brine, in}} - T_{\text{brine, out}}$) gated on `compressor == 'on'`, `status_time >= 180`, and $\Delta T_{\text{brine}} \ge 1.0\text{ K}$, else `none` |
+| `sensor.warmtepomp_actieve_aanvoertemperatuur_verwarmen` | `01M7Z02MCSRAKN471339CMPKF2` | °C | Active steady-state heating supply temperature ($T_{\text{VL}}$) **only** during steady-state `heating`, else `none` |
+| `sensor.warmtepomp_actieve_bodembron_inlaattemperatuur` | `01M7Z02PEQXW1Q7JVJF4DM7F4M` | °C | Active steady-state ground loop brine inlet temperature ($T_{\text{brine, in}}$) when compressor is running (`status_time >= 180`, $\Delta T_{\text{brine}} \ge 1.0\text{ K}$), else `none` |
+| `sensor.warmtepomp_actieve_bodembron_uitlaattemperatuur` | `01M7Z02RB474KT0AJ6CKAA2VSP` | °C | Active steady-state ground loop brine outlet temperature ($T_{\text{brine, out}}$) when compressor is running (`status_time >= 180`, $\Delta T_{\text{brine}} \ge 1.0\text{ K}$), else `none` |
+| `sensor.warmtepomp_graaddagen_hdd18` | `01M7XA0Y140PXRAPFWZXR4X93T` | °C | Instantaneous Heating Degree Days weight ($\max(0, 18.0 - T_{\text{outdoor}})$) |
+| `sensor.warmtepomp_gemiddelde_compressor_runduur` | `01M7XA113WZFPJPZCBXDJA6A8E` | min | Cumulative average compressor run duration per start ($\frac{\text{Hours} \times 60}{\text{Starts}}$) |
