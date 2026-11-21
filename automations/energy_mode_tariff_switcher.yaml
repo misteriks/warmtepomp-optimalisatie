@@ -1,6 +1,8 @@
 # Automation: Automatic Tariff Switcher for Heat Pump 6-Mode Utility Meter
 # Routes every kWh from sensor.energymonitor_warmtepomp_total_active_energy
 # into the active operational tariff on select.warmtepomp_energie.
+# Note: binary_sensor.luxtronik_220131_0144_dhw_recirculation_pump maps to
+# Luxtronik register 0038 ID_WEB_BUPout (DHW Charging Pump / 3-way diverter valve BUP).
 
 alias: "Warmtepomp: Energiemodus Schakelaar"
 description: "Schakelt automatisch het actieve tarief van select.warmtepomp_energie op basis van de Luxtronik bedrijfsstand en pomp-/relaisstatus."
@@ -13,10 +15,9 @@ triggers:
       - sensor.luxtronik_220131_0144_status
       - binary_sensor.luxtronik_220131_0144_additional_heat_generator
       - binary_sensor.luxtronik_220131_0144_compressor
-      - binary_sensor.luxtronik_220131_0144_dhw_charging_pump
+      - binary_sensor.luxtronik_220131_0144_dhw_recirculation_pump
       - binary_sensor.luxtronik_220131_0144_circulation_pump_heating
       - binary_sensor.luxtronik_220131_0144_additional_circulation_pump
-      - binary_sensor.luxtronik_220131_0144_dhw_circulation_pump
   - trigger: homeassistant
     event: start
 
@@ -26,10 +27,9 @@ actions:
         {% set status = states('sensor.luxtronik_220131_0144_status') %}
         {% set zwe = is_state('binary_sensor.luxtronik_220131_0144_additional_heat_generator', 'on') %}
         {% set comp = is_state('binary_sensor.luxtronik_220131_0144_compressor', 'on') %}
-        {% set bup = is_state('binary_sensor.luxtronik_220131_0144_dhw_charging_pump', 'on') %}
+        {% set bup = is_state('binary_sensor.luxtronik_220131_0144_dhw_recirculation_pump', 'on') %}
         {% set hup = is_state('binary_sensor.luxtronik_220131_0144_circulation_pump_heating', 'on') %}
         {% set zup = is_state('binary_sensor.luxtronik_220131_0144_additional_circulation_pump', 'on') %}
-        {% set dhw_circ = is_state('binary_sensor.luxtronik_220131_0144_dhw_circulation_pump', 'on') %}
         {% if zwe %}
           aux_heater
         {% elif status == 'hot_water' or (bup and comp) %}
@@ -38,7 +38,7 @@ actions:
           heating
         {% elif status == 'cooling' %}
           cooling
-        {% elif hup or zup or dhw_circ %}
+        {% elif hup or zup or bup %}
           circulation
         {% else %}
           standby

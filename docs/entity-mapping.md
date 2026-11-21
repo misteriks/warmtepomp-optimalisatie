@@ -40,7 +40,8 @@ This document catalogs all Home Assistant entities for the Alpha Innotec WZS 81H
 | `binary_sensor.luxtronik_220131_0144_compressor` | Compressor 1 | `on` when compressor is active |
 | `binary_sensor.luxtronik_220131_0144_circulation_pump_heating` | HUP | Heating circulation pump |
 | `binary_sensor.luxtronik_220131_0144_additional_circulation_pump` | ZUP | Auxiliary / floor heating circulation pump |
-| `binary_sensor.luxtronik_220131_0144_dhw_charging_pump` | BUP | DHW diverter valve / cylinder charging pump |
+| `binary_sensor.luxtronik_220131_0144_dhw_recirculation_pump` | BUP (`0038 ID_WEB_BUPout`) | DHW diverter valve / cylinder charging pump (active during `hot_water` cycles) |
+| `binary_sensor.luxtronik_220131_0144_dhw_charging_pump` | ZIP (`0046 ID_WEB_ZIPout`) | External DHW ring-main circulation pump (not physically installed; permanently `off`) |
 | `binary_sensor.luxtronik_220131_0144_additional_heat_generator` | ZWE | Auxiliary electric immersion heater (6 kW) |
 | `binary_sensor.luxtronik_220131_0144_approval_cooling` | Cool Approval | Passive cooling approval state |
 | `binary_sensor.luxtronik_220131_0144_evu_unlocked` | EVU Unlocked | Grid utility lock release (`on` = allowed to run) |
@@ -89,7 +90,7 @@ This document catalogs all Home Assistant entities for the Alpha Innotec WZS 81H
 ## 7. OpenEnergyMonitor Diagnostic Template Sensors
 | Entity ID | Unit | Formula / Description |
 | :--- | :--- | :--- |
-| `sensor.warmtepomp_geschatte_cop` | COP | Practical Carnot COP ($0.50 \times \frac{T_{\text{VL}} + 273.15}{(T_{\text{VL}} - T_{\text{brine, out}}) + 4.0}$) when compressor is running (`0.0` when idle) |
+| `sensor.warmtepomp_geschatte_cop` | COP | Practical Carnot COP ($0.50 \times \frac{T_{\text{VL}} + 273.15}{(T_{\text{VL}} - T_{\text{brine, out}}) + 4.0}$) when compressor is running (`none` / `unknown` when idle so LTS hourly/daily `mean` excludes standby) |
 | `sensor.warmtepomp_condensor_delta_t` | K | Condenser temperature spread ($T_{\text{VL}} - T_{\text{RL}}$) |
 | `sensor.warmtepomp_bodembron_delta_t` | K | Ground loop brine temperature spread ($T_{\text{brine, in}} - T_{\text{brine, out}}$) |
 | `sensor.warmtepomp_graaddagen_hdd18` | °C | Instantaneous Heating Degree Days weight ($\max(0, 18.0 - T_{\text{outdoor}})$) |

@@ -1,4 +1,4 @@
-# Alpha Innotec WZS 81H/K Telemetry Dashboard (Phase 1 Sensors + Phase 2 Diagnostic Charts)
+# Alpha Innotec WZS 81H/K Telemetry Dashboard (Phase 1 Sensors + Phase 2 / 2.1 Diagnostic Charts)
 # Deployed to Home Assistant: dashboard-test
 #   - views[0]: Warmtepomp (/dashboard-test/warmtepomp) -> Sensor-only entities cards
 #   - views[1]: Warmtepomp Grafieken (/dashboard-test/warmtepomp-grafieken) -> Full-width Panel 48h/14d Diagnostic Charts
@@ -183,8 +183,8 @@ views:
               - entity: binary_sensor.luxtronik_220131_0144_additional_circulation_pump
                 name: "Vloerverwarming Pomp (ZUP)"
                 icon: mdi:pump
-              - entity: binary_sensor.luxtronik_220131_0144_dhw_charging_pump
-                name: "Tapwater Laadpomp (BUP)"
+              - entity: binary_sensor.luxtronik_220131_0144_dhw_recirculation_pump
+                name: "Tapwater Laadpomp / 3-Wegklep (BUP)"
                 icon: mdi:pump
               - entity: binary_sensor.luxtronik_220131_0144_additional_heat_generator
                 name: "Elektrisch Element Actief (ZWE)"
@@ -408,8 +408,8 @@ views:
                     name: "CV Pomp (HUP)"
                   - entity: binary_sensor.luxtronik_220131_0144_additional_circulation_pump
                     name: "Vloer Pomp (ZUP)"
-                  - entity: binary_sensor.luxtronik_220131_0144_dhw_charging_pump
-                    name: "Tapwater Pomp (BUP)"
+                  - entity: binary_sensor.luxtronik_220131_0144_dhw_recirculation_pump
+                    name: "Tapwater Pomp / 3-Wegklep (BUP)"
                   - entity: binary_sensor.luxtronik_220131_0144_additional_heat_generator
                     name: "Elektrisch Element (ZWE)"
               - type: statistics-graph
@@ -432,3 +432,34 @@ views:
                     name: "5. Circulatiepompen (Zonder Comp.)"
                   - entity: sensor.warmtepomp_energie_standby
                     name: "6. Puur Standby"
+
+          - type: grid
+            columns: 2
+            square: false
+            cards:
+              - type: statistics-graph
+                title: "6. Draaiuren per Modus per Dag (uur)"
+                period: day
+                days_to_show: 14
+                stat_types:
+                  - change
+                chart_type: bar
+                entities:
+                  - entity: sensor.luxtronik_220131_0144_operation_hours_heating
+                    name: "1. Draaiuren Verwarmen (u)"
+                  - entity: sensor.luxtronik_220131_0144_dhw_operation_hours
+                    name: "2. Draaiuren Warm Tapwater (u)"
+                  - entity: sensor.luxtronik_220131_0144_operation_hours_cooling
+                    name: "3. Draaiuren Passief Koelen (u)"
+                  - entity: sensor.luxtronik_220131_0144_additional_heat_generator_operation_hours
+                    name: "4. Draaiuren Elektrisch Element (u)"
+              - type: statistics-graph
+                title: "7. Compressor Starts (Impulsen) per Dag"
+                period: day
+                days_to_show: 14
+                stat_types:
+                  - change
+                chart_type: bar
+                entities:
+                  - entity: sensor.luxtronik_220131_0144_compressor1_impulses
+                    name: "Compressor Starts (Impulsen / dag)"
